@@ -1,4 +1,4 @@
-module hng/stage-1
+module github.com/Abdulrasheed1729/hng-stage-1
 
 go 1.21
 

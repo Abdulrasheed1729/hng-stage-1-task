@@ -9,6 +9,8 @@ import (
 	"net/http"
 	"os"
 
+	ht "github.com/Abdulrasheed1729/hng-stage-1/types"
+
 	_ "github.com/joho/godotenv/autoload"
 )
 
@@ -35,7 +37,7 @@ func getLocation(ip string) (string, error) {
 		return "", err
 	}
 
-	var ip2locationResponse IPToLocationResponse
+	var ip2locationResponse ht.IPToLocationResponse
 
 	err = json.Unmarshal(body, &ip2locationResponse)
 
@@ -65,7 +67,7 @@ func getWeather(city string) (float64, error) {
 		return 0.0, err
 	}
 
-	var weatherAPIResponse WeatherAPIResponse
+	var weatherAPIResponse ht.WeatherAPIResponse
 
 	err = json.Unmarshal(body, &weatherAPIResponse)
 
@@ -105,11 +107,11 @@ func Hello(w http.ResponseWriter, r *http.Request) {
 
 	var greeting string
 
-	var resp Response
+	var resp ht.Response
 
 	if clientIp == "127.0.0.1" {
 		greeting = fmt.Sprintf("Hello, %s!, the temperature is %0.f degrees Celsius at home.", visitorName, 21.0)
-		resp = Response{
+		resp = ht.Response{
 			ClientIp: clientIp,
 			Location: cityName,
 			Greeting: greeting,
@@ -124,7 +126,7 @@ func Hello(w http.ResponseWriter, r *http.Request) {
 
 	greeting = fmt.Sprintf("Hello, %s!, the temperature is %0.f degrees Celsius in %s", visitorName, temperature, cityName)
 
-	resp = Response{
+	resp = ht.Response{
 		ClientIp: clientIp,
 		Location: cityName,
 		Greeting: greeting,
