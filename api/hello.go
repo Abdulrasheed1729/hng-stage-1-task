@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net"
 	"net/http"
 	"os"
@@ -75,23 +76,25 @@ func getWeather(city string) (float64, error) {
 	return weatherAPIResponse.Current.TempC, nil
 }
 
-func Hello(w http.ResponseWriter, r *http.Request) error {
+func Hello(w http.ResponseWriter, r *http.Request) {
 	clientIp, _, err := net.SplitHostPort(r.RemoteAddr)
 
 	if err != nil {
-		return err
+		log.Fatal(err)
 	}
 
 	cityName, err := getLocation(clientIp)
 
 	if err != nil {
-		return err
+		log.Fatal(err)
+
 	}
 
 	temperature, err := getWeather(cityName)
 
 	if err != nil {
-		return err
+		log.Fatal(err)
+
 	}
 
 	visitorName := r.URL.Query().Get("visitor_name")
@@ -112,7 +115,11 @@ func Hello(w http.ResponseWriter, r *http.Request) error {
 			Greeting: greeting,
 		}
 
-		return WriteJSON(w, http.StatusOK, resp)
+		err = WriteJSON(w, http.StatusOK, resp)
+
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 
 	greeting = fmt.Sprintf("Hello, %s!, the temperature is %0.f degrees Celsius in %s", visitorName, temperature, cityName)
@@ -123,7 +130,11 @@ func Hello(w http.ResponseWriter, r *http.Request) error {
 		Greeting: greeting,
 	}
 
-	return WriteJSON(w, http.StatusOK, resp)
+	err = WriteJSON(w, http.StatusOK, resp)
+
+	if err != nil {
+		log.Fatal(err)
+	}
 
 }
 
