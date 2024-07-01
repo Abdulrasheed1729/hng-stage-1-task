@@ -121,12 +121,16 @@ func (s *APIServer) handleHello(w http.ResponseWriter, r *http.Request) error {
 		visitorName = "Guest"
 	}
 
+	if cityName == "-" {
+		cityName = "localhost"
+	}
+
 	var greeting string
 
 	var resp Response
 
 	if clientIp == "127.0.0.1" {
-		greeting = fmt.Sprintf("Hello, %s!, the temperature is %0.f degrees Celsius at home.", visitorName, 21.0)
+		greeting = fmt.Sprintf("Hello, %s!, the temperature is %0.f degrees Celsius at localhost.", visitorName, 21.0)
 		resp = Response{
 			ClientIp: clientIp,
 			Location: cityName,

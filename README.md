@@ -16,7 +16,7 @@ This repo contains code for an API endpoint that returns a JSON response of this
 
 To test this run:
 ```sh
-curl https://c2dgj8vh-4000.euw.devtunnels.ms/hello?visitor_name="Mark"
+curl https://c2dgj8vh-3000.euw.devtunnels.ms/hello?visitor_name="Mark"
 ```
 
 ### Installation
