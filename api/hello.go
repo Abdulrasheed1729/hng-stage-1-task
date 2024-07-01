@@ -1,10 +1,9 @@
-package main
+package handler
 
 import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"net"
 	"net/http"
 	"os"
@@ -12,30 +11,10 @@ import (
 	_ "github.com/joho/godotenv/autoload"
 )
 
-type APIServer struct {
-	listenAddr string
-}
-
 var (
 	ipToLocationAPIKey = os.Getenv("IP_TO_LOCATION_API_KEY")
 	weatherAPIKey      = os.Getenv("WEATHER_API_KEY")
 )
-
-func NewAPIServer(listenAddr string) *APIServer {
-	return &APIServer{
-		listenAddr: listenAddr,
-	}
-}
-
-func (s *APIServer) Run() {
-	router := http.NewServeMux()
-
-	log.Println("JSON API server running on port: ", s.listenAddr)
-
-	router.HandleFunc("/hello", makeHTTPHandleFunc(s.handleHello))
-
-	http.ListenAndServe(s.listenAddr, router)
-}
 
 func getLocation(ip string) (string, error) {
 
@@ -96,7 +75,7 @@ func getWeather(city string) (float64, error) {
 	return weatherAPIResponse.Current.TempC, nil
 }
 
-func (s *APIServer) handleHello(w http.ResponseWriter, r *http.Request) error {
+func Hello(w http.ResponseWriter, r *http.Request) error {
 	clientIp, _, err := net.SplitHostPort(r.RemoteAddr)
 
 	if err != nil {
@@ -153,18 +132,4 @@ func WriteJSON(w http.ResponseWriter, status int, v any) error {
 	w.WriteHeader(status)
 
 	return json.NewEncoder(w).Encode(v)
-}
-
-type apiFunc func(http.ResponseWriter, *http.Request) error
-
-type ApiError struct {
-	Error string `json:"error"`
-}
-
-func makeHTTPHandleFunc(f apiFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		if err := f(w, r); err != nil {
-			WriteJSON(w, http.StatusBadRequest, ApiError{Error: err.Error()})
-		}
-	}
 }
