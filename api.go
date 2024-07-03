@@ -31,7 +31,7 @@ func (s *APIServer) Run() {
 
 	log.Println("JSON API server running on port: ", s.listenAddr)
 
-	router.HandleFunc("/hello", makeHTTPHandleFunc(s.handleHello))
+	router.HandleFunc("/api/hello", makeHTTPHandleFunc(s.handleHello))
 
 	http.ListenAndServe(s.listenAddr, router)
 }
