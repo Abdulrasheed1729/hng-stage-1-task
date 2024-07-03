@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io"
 	"log"
-	"net"
 	"net/http"
 	"os"
 
@@ -97,11 +96,12 @@ func getWeather(city string) (float64, error) {
 }
 
 func (s *APIServer) handleHello(w http.ResponseWriter, r *http.Request) error {
-	clientIp, _, err := net.SplitHostPort(r.RemoteAddr)
+	// clientIp, _, err := net.SplitHostPort(r.RemoteAddr)
+	clientIp := r.Header.Get("CF-Connecting-IP")
 
-	if err != nil {
-		return err
-	}
+	// if err != nil {
+	// 	return err
+	// }
 
 	cityName, err := getLocation(clientIp)
 
